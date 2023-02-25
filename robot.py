@@ -112,28 +112,28 @@ class Robot(wpilib.TimedRobot):
             self.speed=0
         elif  self.RB_Button:
             self.speed=1
-        
         else:
             self.speed=0.7
-        # self.speed = self.joystick.getRawAxis(3)
-        # print(self.speed)
 
 
+        # this uses the dpad to drive
         # self.driveTrain.arcadeDrive(self.speed*self.joystick.getY(), self.speed*self.joystick.getX())
 
 
 
-        if self.Y_Button:
-            self.direction=-1*self.direction
+        # this was supposed to change direction of the bot, but i couldnt get it to work. i gave up
+        # if self.Y_Button:
+        #     self.direction=-1*self.direction
 
-            
         # drive forward
-        elif self.direction==1: 
-            self.driveTrain.tankDrive(self.speed*self.leftThumbJoyStick, self.speed*self.rightThumbJoyStick)
+        # elif self.direction==1: 
+        #     self.driveTrain.tankDrive(self.speed*self.leftThumbJoyStick, self.speed*self.rightThumbJoyStick)
         
-        # drive backwards
-        elif self.direction==-1: 
-            self.driveTrain.tankDrive(-1*self.speed*self.rightThumbJoyStick, -1*self.speed*self.leftThumbJoyStick)
+        # drive normal forwards
+        # if self.direction==-1: 
+            # this is supposed to change directions, but i couldnt get it to work
+            
+        self.driveTrain.tankDrive(-1*self.speed*self.rightThumbJoyStick, -1*self.speed*self.leftThumbJoyStick)
         
 if __name__ == "__main__":
     wpilib.run(Robot)
