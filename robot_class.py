@@ -9,24 +9,50 @@ Main functions of the robot are as follows:
         6 wheels
     Arm Mechanism
 """
+import rev
 import wpilib
+from wpilib.drive import DifferentialDrive
 
-class MyRobot(wpilib.TimedRobot):
+class Robot(wpilib.TimedRobot):
     # Joystick sensitivity.
     SENSITIVITY = 0.5
+    # Drive train differential adjustment
+    DIFFERENTIAL = 0.1
+
+ 
 
     def robotInit(self):
+        # Grabbing Left Motors. LLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        self._left_lead_motor = rev.CANSparkMax(1,rev.CANSparkMax.MotorType.kBrushed)
+        self._left_follow_motor = rev.CANSparkMax(2, rev.CANSparkMax.MotorType.kBrushed)
+
+        self._left_lead_motor.setInverted(False)
+        self._left_follow_motor.setInverted(False)
+        
+        # Grabbing Right Motors. RRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        self._right_lead_motor = rev.CANSparkMax(3, rev.CANSparkMax.MotorType.kBrushed)
+        self._right_follow_motor = rev.CANSparkMax(4, rev.CANSparkMax.MotorType.kBrushed)
+        
+        self._right_lead_motor.setInverted(True)
+        self._right_follow_motor.setInverted(True) 
+    
         # Setting up the motor controllers.
-        self._left_drive_side = wpilib.SpeedControllerGroup(wpilib.Spark(3),
-                                                            wpilib.Spark(4))
-        self._right_drive_side = wpilib.SpeedControllerGroup(wpilib.Spark(1),
-                                                             wpilib.Spark(2))
+        self._left_drive_side = wpilib.MotorControllerGroup(
+            self._left_lead_motor, self._left_follow_motor)
+        
+        self._right_drive_side = wpilib.MotorControllerGroup(
+            self._right_lead_motor, self._right_follow_motor)
 
         # Setting up the joysticks.
         self._left_joystick = wpilib.Joystick(0)
         self._right_joystick = wpilib.Joystick(1)
 
+        # Setting up a differential drive.
+        self.drive_train = DifferentialDrive(self.left_drive_side,
+                                             self.right_drive_side)
+        self.drive_train.setExpiration(self.DIFFERENTIAL)
 
+    # Drive Side.
     @property
     def left_drive_side(self):
         return self._left_drive_side
@@ -34,6 +60,21 @@ class MyRobot(wpilib.TimedRobot):
     def right_drive_side(self):
         return self._right_drive_side
     
+    # Motors.
+    @property
+    def left_lead_motor(self):
+        return self._left_lead_motor
+    @property
+    def left_follow_motor(self):
+        return self._left_follow_motor
+    @property
+    def right_lead_motor(self):
+        return self._right_lead_motor
+    @property
+    def right_follow_motor(self):
+        return self._right_follow_motor
+    
+    # Joysticks.
     @property
     def left_joystick(self):
         return self._left_joystick
@@ -96,12 +137,3 @@ class MyRobot(wpilib.TimedRobot):
         # Now set the motor speed to the joystick values.
         self._left_drive_side.set(left_speed)
         self._right_drive_side.set(right_speed)
-
-
-##############################################################################
-##############################################################################
-# FOR TESTING PURPOSES ONLY
-if __name__ == '__main__':   
-    print(F'\nStarting Robot\n')
-    wpilib.run(MyRobot())
-    print(F'\nRobot Ready for Shutdown\n')
