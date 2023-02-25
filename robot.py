@@ -97,16 +97,20 @@ class Robot(wpilib.TimedRobot):
         # left/right on the right thumb joystick self.joystick.getRawAxis(4)
         # up/down on the right thumb joystick self.joystick.getRawAxis(5)
 
+        self.Y_Button=self.joystick.getRawButton(4)
+        self.LB_Button=self.joystick.getRawButton(5)
+        self.RB_Button=self.joystick.getRawButton(6)
+        self.leftThumbJoyStick=self.joystick.getRawAxis(1)
+        self.rightThumbJoyStick=self.joystick.getRawAxis(5)
 
-        # print("axis",self.joystick.getRawAxis(5))
         
         
 
             
 
-        if  self.joystick.getRawButton(5):
+        if  self.LB_Button:
             self.speed=0
-        elif  self.joystick.getRawButton(6):
+        elif  self.RB_Button:
             self.speed=1
         
         else:
@@ -117,18 +121,19 @@ class Robot(wpilib.TimedRobot):
 
         # self.driveTrain.arcadeDrive(self.speed*self.joystick.getY(), self.speed*self.joystick.getX())
 
-        if self.joystick.getRawButton(4):
+
+
+        if self.Y_Button:
             self.direction=-1*self.direction
 
-            if self.direction==-1:
-                self.leftThumbJoyStick=self.joystick.getRawAxis(1)
-                self.rightThumbJoyStick=self.joystick.getRawAxis(5)
-            else:
-                self.leftThumbJoyStick=self.joystick.getRawAxis(5)
-                self.rightThumbJoyStick=self.joystick.getRawAxis(1)
-
-        else:
-            self.driveTrain.tankDrive(self.direction*self.speed*self.leftThumbJoyStick, self.direction*self.speed*self.rightThumbJoyStick)
+            
+        # drive forward
+        elif self.direction==1: 
+            self.driveTrain.tankDrive(self.speed*self.leftThumbJoyStick, self.speed*self.rightThumbJoyStick)
+        
+        # drive backwards
+        elif self.direction==-1: 
+            self.driveTrain.tankDrive(-1*self.speed*self.rightThumbJoyStick, -1*self.speed*self.leftThumbJoyStick)
         
 if __name__ == "__main__":
     wpilib.run(Robot)
