@@ -23,51 +23,25 @@
 """ Import all necessary libraries and other scripts into this main file. """
 # import wpilib
 # import wpilib.drive
+# from robot_class import MyRobot
 
+##############################################################################
+def status_check(status):
+    
+    if status == 0:
+        mode = 'HOME'
+        print(F'The Robot is in {mode} mode.')
+    elif status == 1:
+        mode = 'EVENT'
+        print(F'The Robot is in {mode} mode.')
+    else:
+        print('The robot is in standby mode - there may be a \
+            communication error.')
 ##############################################################################
 ##############################################################################
 # main
 if __name__ == '__main__':   
-    """ Set the status of the robot to be at home or at competition. """ 
-    status = 'HOME'
-    # status = 'EVENT'
-
+    status_check(0)  # Set status to 0 for at home || and 1 for at event
     print(F'\nStarting Robot\n')
-
-    """ 
-    Run Robot Code Here.
-
-    This will look something like
-
-        if match at competition:
-            wait for field signal
-                run autonomous
-            wait for field signal
-                enable teleop
-            wait for field signal
-                disable robot
-        elif practice at competition:
-            switch
-                test auto
-                test teleop
-        else:
-            switch
-                test auto
-                test teleop
-    """
-
-    if status == 'HOME':
-        print(F'The Robot is in {status} mode.')
-    elif status == 'EVENT':
-        print(F'The Robot is in {status} mode.')
-        mode = 'AUTO'
-        # robot.auto
-        mode = 'TELEOP'
-        #robot.telop
-
-    else:
-        print('The robot is in standby mode - there may be a \
-              communication error.')
-
-    # wpilib.run(MyRobot)
+    # wpilib.run(robot_class.MyRobot())
     print(F'\nRobot Ready for Shutdown\n')

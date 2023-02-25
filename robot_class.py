@@ -96,3 +96,12 @@ class MyRobot(wpilib.TimedRobot):
         # Now set the motor speed to the joystick values.
         self._left_drive_side.set(left_speed)
         self._right_drive_side.set(right_speed)
+
+
+##############################################################################
+##############################################################################
+# FOR TESTING PURPOSES ONLY
+if __name__ == '__main__':   
+    print(F'\nStarting Robot\n')
+    wpilib.run(MyRobot())
+    print(F'\nRobot Ready for Shutdown\n')
