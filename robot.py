@@ -83,7 +83,6 @@ class Robot(wpilib.TimedRobot):
 
         self.speed=0.7
 
-<<<<<<< HEAD
         # A button: self.joystick.getRawButton(1)
         # B button: self.joystick.getRawButton(2)
         # X button: self.joystick.getRawButton(3)
@@ -133,13 +132,3 @@ class Robot(wpilib.TimedRobot):
         
 if __name__ == "__main__":
     wpilib.run(Robot)
-=======
-##############################################################################
-##############################################################################
-# main
-if __name__ == '__main__':   
-    status_check(0)  # Set status to 0 for at home || and 1 for at event
-    print(F'\nStarting Robot\n')
-    wpilib.run(Robot())
-    print(F'\nRobot Ready for Shutdown\n')
->>>>>>> 552400986a22f6f1f0e98c3b87834eb0a394aeea
