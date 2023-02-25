@@ -25,7 +25,6 @@ import rev
 import wpilib
 import wpilib.drive
 from wpilib.drive import DifferentialDrive
-from robot_class import Robot
 
 ##############################################################################
 def status_check(status):
@@ -171,5 +170,5 @@ class Robot(wpilib.TimedRobot):
 if __name__ == '__main__':   
     status_check(0)  # Set status to 0 for at home || and 1 for at event
     print(F'\nStarting Robot\n')
-    wpilib.run(robot_class.Robot())
+    wpilib.run(Robot())
     print(F'\nRobot Ready for Shutdown\n')
