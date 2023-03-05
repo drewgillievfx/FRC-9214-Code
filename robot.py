@@ -37,6 +37,8 @@ class Robot(wpilib.TimedRobot):
     DIFFERENTIAL = 0.1
     # Speed setting. We found that 70% works best
     SPEED = 0.7
+    AUTO_SPEED_01 = 0.3
+
 
     def robotInit(self):
         wpilib.CameraServer.launch("vision.py:main")
@@ -123,14 +125,6 @@ class Robot(wpilib.TimedRobot):
     
     ##########################################################################
     """ AUTO. """
-    """
-    AUTO 1:
-        Drive forward for 2 seconds
-        Stop for 2 seconds
-        
-    AUTO 2:
-    AUTO 3:
-    """
     
     def spin(self, direction, speed: float):
         """ Spin is created for auto mode, to make changes more intuitive. """
@@ -145,9 +139,10 @@ class Robot(wpilib.TimedRobot):
             self.right_drive_side.set(0.0)  # value is speed of gearbox
 
     def brake(self):
-        """ Brake is created for auto mode, to make changes more intuitive. """
-        self.left_drive_side.set(0.0)  # value is speed of gearbox
-        self.right_drive_side.set(0.0)  # value is speed of gearbox
+        """ Brake is created for auto mode. """
+        # Value is hardcoded to avoid any strange issues. 
+        self.left_drive_side.set(0.0)
+        self.right_drive_side.set(0.0)
 
     def autonomousInit(self):
         """ This function is run once at the beginning of the match. """
@@ -155,29 +150,63 @@ class Robot(wpilib.TimedRobot):
         self.timer.start()
  
     def autonomousPeriodic(self):
-        # Drive forward for 2 seconds.
-        if self.timer.get() < 2.0:
-            self.left_drive_side.set(0.5)  # value is speed of gearbox
-            self.right_drive_side.set(0.5)  # value is speed of gearbox
+        autonomous_mode = 1
 
-        # Stop for 2 seconds.
-        elif self.timer.get() < 4.0:
+        if autonomous_mode == 1:
+            """ AUTO DRIVE 1. ---------------------------------------------"""
+            """
+            Drive forward to push cone in goal.  Drive backwards, then
+            stop.
+            """
+            # Drive forward for .5 seconds.
+            if self.timer.get() < 0.5:
+                # value is speed of gearbox
+                self.left_drive_side.set(self.AUTO_SPEED_01) 
+                self.right_drive_side.set(self.AUTO_SPEED_01)
+
+            # Stop for half seconds.
+            elif self.timer.get() < 0.5:
+                self.brake()
+
+            # Reverse for 2 seconds.
+            elif self.timer.get() < 3.0:
+                # value is speed of gearbox
+                self.left_drive_side.set(-1 * self.AUTO_SPEED_01)
+                self.right_drive_side.set(-1 * self.AUTO_SPEED_01)
+
+            # Stop for res seconds.
+            elif self.timer.get() > 3.3:
+                self.brake()   
+
+        elif autonomous_mode == 2:
+            """ AUTO DRIVE 2. ---------------------------------------------"""
+            # Drive forward for 2 seconds.
+            if self.timer.get() < 2.0:
+                # value is speed of gearbox
+                self.left_drive_side.set(self.AUTO_SPEED_01)
+                self.right_drive_side.set(self.AUTO_SPEED_01)
+
+            # Stop for 2 seconds.
+            elif self.timer.get() < 4.0:
+                self.brake()
+
+            # Spin  for 2 seconds.
+            elif self.timer.get() < 6.0:
+                self.spin('left', 0.5)
+
+            # Stop for 2 seconds.
+            elif self.timer.get() < 8.0:
+                self.brake()
+
+            else:
+                # value is speed of gearbox
+                self.left_drive_side.set(self.AUTO_SPEED_01)
+                self.right_drive_side.set(self.AUTO_SPEED_01)
+
+        else:  # Just in case, do not drive.
             self.brake()
-
-        # Spin  for 2 seconds.
-        elif self.timer.get() < 6.0:
-            self.spin('left', 0.5)
-
-        # Stop for 2 seconds.
-        elif self.timer.get() < 8.0:
-            self.brake()
-
-        else:
-            self.left_drive_side.set(0.0)  # value is speed of gearbox
-            self.right_drive_side.set(0.0)  # value is speed of gearbox
-
     ##########################################################################
-    # TELEOP
+    """ TELEOP """
 
     def teleopPeriodic(self):
         # Drive with arcade style
