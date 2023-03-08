@@ -1,108 +1,94 @@
-# ----------------------------------------------------------------------------
-# Copyright (c) 2017-2018 FIRST. All Rights Reserved.
-# Open Source Software - may be modified and shared by FRC teams. The code
-# must be accompanied by the FIRST BSD license file in the root directory of
-# the project.
-# ----------------------------------------------------------------------------
+#!/usr/bin/env python3
 
-import rev
 import wpilib
-from wpilib.drive import DifferentialDrive
+import ctre
+import rev
 
 
-class Robot(wpilib.TimedRobot):
+class MyRobot(wpilib.TimedRobot):
+    """
+    This is a short sample program demonstrating how to use the basic throttle
+    mode of the TalonSRX
+    """
+
     def robotInit(self):
-        # SPARK MAX controllers are intialized over CAN by constructing a
-        # CANSparkMax object
-        #
-        # The CAN ID, which can be configured using the SPARK MAX Client, is passed
-        # as the first parameter
-        #
-        # The motor type is passed as the second parameter.
-        # Motor type can either be:
-        #   rev.CANSparkMax.MotorType.kBrushless
-        #   rev.CANSparkMax.MotorType.kBrushed
-        #
-        # The example below initializes four brushless motors with CAN IDs
-        # 1, 2, 3, 4. Change these parameters to match your setup
-
-        # self.cs = wpilib.CameraServer.getInstance()
-        # self.cs.startAutomaticCapture(name="Camera", device="USB Camera 0")
-
-        # wpilib.CameraServer.launch()
-
-        self.leftLeadMotor = rev.CANSparkMax(1,rev.CANSparkMax.MotorType.kBrushed)
-        self.leftFollowMotor = rev.CANSparkMax(2, rev.CANSparkMax.MotorType.kBrushed)
-
-
-        self.rightLeadMotor = rev.CANSparkMax(3, rev.CANSparkMax.MotorType.kBrushed)
-        self.rightFollowMotor = rev.CANSparkMax(4, rev.CANSparkMax.MotorType.kBrushed)
-
-        self.leftLeadMotor.setInverted(False)
-        self.leftFollowMotor.setInverted(False)
-        
-        self.rightLeadMotor.setInverted(True)
-        self.rightFollowMotor.setInverted(True)        
-
+        # Setup Joystick
+        self.Joystick = wpilib.Joystick(0)
         
 
-        # Passing in the lead motors into DifferentialDrive allows any
-        # commmands sent to the lead motors to be sent to the follower motors.
-        self.driveTrain = DifferentialDrive(self.leftLeadMotor, self.rightLeadMotor)
-        self.joystick = wpilib.Joystick(0)
+        self.LeftFrontMotor = ctre.WPI_TalonSRX(1)
+        self.LeftRearMotor = ctre.WPI_TalonSRX(2)
+        self.LeftRearMotor.follow(self.LeftFrontMotor)
 
-        # The RestoreFactoryDefaults method can be used to reset the
-        # configuration parameters in the SPARK MAX to their factory default
-        # state. If no argument is passed, these parameters will not persist
-        # between power cycles
-        # self.leftLeadMotor.restoreFactoryDefaults()
-        # self.rightLeadMotor.restoreFactoryDefaults()
-        # self.leftFollowMotor.restoreFactoryDefaults()
-        # self.rightFollowMotor.restoreFactoryDefaults()
+        self.RightFrontMotor = ctre.WPI_TalonSRX(3)
+        self.RightRearMotor = ctre.WPI_TalonSRX(4)
+        self.RightRearMotor.follow(self.RightFrontMotor)
 
-        # In CAN mode, one SPARK MAX can be configured to follow another. This
-        # is done by calling the follow() method on the SPARK MAX you want to
-        # configure as a follower, and by passing as a parameter the SPARK MAX
-        # you want to configure as a leader.
-        #
-        # This is shown in the example below, where one motor on each side of
-        # our drive train is configured to follow a lead motor.
-        self.leftFollowMotor.follow(self.leftLeadMotor)
-        self.rightFollowMotor.follow(self.rightLeadMotor)
+        self.JackShaftMotor = rev.CANSparkMax(6,rev.CANSparkMax.MotorType.kBrushless)
+        self.encoder = self.JackShaftMotor.getEncoder()
+        # self.controller = wpilib.PIDController(1, 0, 0, self.encoder, self.JackShaftMotor)
+
+        self.IntakeMotor = rev.CANSparkMax(7,rev.CANSparkMax.MotorType.kBrushless)
+        
+
+    def disabledPeriodic(self):
+        self.LeftFrontMotor.disable()
+        self.LeftRearMotor.disable()
+        self.RightFrontMotor.disable()
+        self.RightRearMotor.disable()
+        self.IntakeMotor.disable()
+        self.JackShaftMotor.disable()
 
     def teleopPeriodic(self):
-        # Drive with arcade style
 
-        self.speed=0.7
+        self.LEFT_THUMB_LEFTRIGHT = self.Joystick.getRawAxis(0)
+        self.LEFT_THUMB_UPDOWN = self.Joystick.getRawAxis(1)
+        self.RIGHT_THUMB_LEFTRIGHT = self.Joystick.getRawAxis(4)
+        self.RIGHT_THUMB_UPDOWN = self.Joystick.getRawAxis(5)
 
-        # A button: self.joystick.getRawButton(1)
-        # B button: self.joystick.getRawButton(2)
-        # X button: self.joystick.getRawButton(3)
-        # Y button: self.joystick.getRawButton(4)
-        # LB button: self.joystick.getRawButton(5)
-        # RB button: self.joystick.getRawButton(6)
+        self.LEFT_TRIGGER=self.Joystick.getRawAxis(2)
+        self.RIGHT_TRIGGER=self.Joystick.getRawAxis(3)
 
-        # left/right on the left thumb joystick self.joystick.getRawAxis(0)
-        # up/down on the left thumb joystick self.joystick.getRawAxis(1)
-        # LT  self.joystick.getRawAxis(2)
-        # RT  self.joystick.getRawAxis(3)
-        # left/right on the right thumb joystick self.joystick.getRawAxis(4)
-        # up/down on the right thumb joystick self.joystick.getRawAxis(5)
+        self.A_Button=self.Joystick.getRawButton(1)
+        self.B_Button=self.Joystick.getRawButton(2)
+        self.X_Button=self.Joystick.getRawButton(3)
+        self.Y_Button=self.Joystick.getRawButton(4)
+        self.LB_Button=self.Joystick.getRawButton(5)
+        self.RB_Button=self.Joystick.getRawButton(6)
 
 
-        # print("axis",self.joystick.getRawAxis(5))
 
-        # if  self.joystick.getRawButton(1):
-        #     self.speed=1
-        # else:
-        #     self.speed=0.7
-        self.speed = self.joystick.getRawAxis(3)
-        print(self.speed)
+        # Set the motor's output to half power.
+        # This takes a number from -1 (100% speed in reverse) to +1 (100%
+        # speed going forward)
+        # if self.A_Button:
+        self.Speed=0.5
+        self.LeftFrontMotor.set(-1*self.Speed*self.LEFT_THUMB_UPDOWN)
+        self.RightFrontMotor.set(self.Speed*self.RIGHT_THUMB_UPDOWN)
+
+        # if self.RIGHT_TRIGGER > 0:
+        #     self.IntakeMotor.set(self.Speed*self.RIGHT_TRIGGER)
+        # if self.LEFT_TRIGGER > 0:
+        #     self.IntakeMotor.set(-1*self.Speed*self.LEFT_TRIGGER)
+
+        # Move the jackshaft to the up position:
+        if self.Y_Button:
+            current_position = self.encoder.getPosition() # get current position of motor
+            print("Current position:", current_position)
+            self.encoder.setPosition()
+            
+        if self.RIGHT_TRIGGER > 0:
+            self.JackShaftMotor.set(self.Speed*self.RIGHT_TRIGGER)
+        if self.LEFT_TRIGGER > 0:
+            self.JackShaftMotor.set(-1*self.Speed*self.LEFT_TRIGGER)
+        
+
+        # if self.B_Button:
+        #     self.LeftFrontMotor.set(1.0)
+        # if self.Y_Button:
+        #     self.LeftFrontMotor.set(0)
+            
 
 
-        self.driveTrain.arcadeDrive(self.speed*self.joystick.getY(), self.speed*self.joystick.getX())
-
-        # self.driveTrain.tankDrive(self.joystick.getRawAxis(0), self.joystick.getRawAxis(1))
-        # self.driveTrain.tankDrive
 if __name__ == "__main__":
-    wpilib.run(Robot)
+    wpilib.run(MyRobot)
