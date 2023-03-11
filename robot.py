@@ -29,7 +29,7 @@ class MyRobot(wpilib.TimedRobot):
         # self.controller = wpilib.PIDController(1, 0, 0, self.encoder, self.JackShaftMotor)
 
         self.IntakeMotor = rev.CANSparkMax(7,rev.CANSparkMax.MotorType.kBrushless)
-        
+        self.IntakeMotor.getOutputCurrent()
 
     def disabledPeriodic(self):
         self.LeftFrontMotor.disable()
