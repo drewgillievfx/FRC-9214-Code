@@ -41,7 +41,8 @@ class MyRobot(wpilib.TimedRobot):
         # self.controller = wpilib.PIDController(1, 0, 0, self.encoder, self.JackShaftMotor)
 
         self.IntakeMotor = rev.CANSparkMax(7,rev.CANSparkMax.MotorType.kBrushless)
-        
+        self.IntakeMotor.setSmartCurrentLimit(20,)
+        self.IntakeMotor.setSecondaryCurrentLimit
 
     def disabledPeriodic(self):
         self.LeftFrontMotor.disable()
@@ -141,14 +142,14 @@ class MyRobot(wpilib.TimedRobot):
         Jackshaft_position = self.encoder.getPosition()
         self.SMARTArmRotation = SmartDashboard.putNumber("Arm Rotation", Jackshaft_position)
         self.SMARTArmRotation = SmartDashboard.putString("Arm Position", self.ARM_POSITION)
-        SmartDashboard.
+      
         
         
         
 
             
         if self.ARM_POSITION=="Extended":
-            if Jackshaft_position > self.ARM_EXTENDED_ENCODER:
+            if Jackshaft_position < self.ARM_EXTENDED_ENCODER:
                 self.JackShaftMotor.set(-1*self.ArmSpeed)
             else:
                 self.JackShaftMotor.set(0)
