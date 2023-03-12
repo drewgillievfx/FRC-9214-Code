@@ -37,9 +37,9 @@ class MyRobot(wpilib.TimedRobot):
         # Constants
         self.MaxDriveSpeed=0.75
         self.MaxArmSpeed=0.5
-        self.UpperArm = 60
-        self.LowerArm = 40
-        self.armHome = 10
+        self.UpperArm = 75
+        self.LowerArm = 60
+        self.armHome = 2
 
         #Auto inits
         self.AutoTimer = wpilib.Timer()
@@ -68,10 +68,10 @@ class MyRobot(wpilib.TimedRobot):
         self.AutoTimer.start()
 
     def autonomousPeriodic(self):
-        if(self.AutoTimer.get() < 3):
-            self.setDrives(0.3, 0.3)
-        elif(self.AutoTimer.get() < 10):
-            self.setDrives(-0.3, -0.3)
+        if(self.AutoTimer.get() < 0.5):
+            self.setDrives(0.5, 0.5)
+        elif(self.AutoTimer.get() < 5):
+            self.setDrives(-0.4, -0.4)
         else:
             self.setDrives(0, 0)
         
@@ -94,7 +94,7 @@ class MyRobot(wpilib.TimedRobot):
         self.LEFT_TRIGGER=self.OperatorJoystick.getRawAxis(2)
         self.RIGHT_TRIGGER=self.OperatorJoystick.getRawAxis(3)
 
-        self.TEST=self.OperatorJoystick.getRawAxis(1)
+        self.Acquire =self.OperatorJoystick.getRawAxis(1)
         self.A_Button=self.OperatorJoystick.getRawButton(1)
         self.B_Button=self.OperatorJoystick.getRawButton(2)
         self.X_Button=self.OperatorJoystick.getRawButton(3)
@@ -130,10 +130,10 @@ class MyRobot(wpilib.TimedRobot):
             if self.LEFT_TRIGGER > 0:
                 self.JackShaftMotor.set(-1*self.MaxArmSpeed*self.LEFT_TRIGGER)
 
-        if (self.TEST > 0.1):
-            self.IntakeMotor.set(0.3)
-        elif(self.TEST < -0.1):
-            self.IntakeMotor.set(-1)
+        if (self.Acquire > 0.1):
+            self.IntakeMotor.set(0.1)
+        elif(self.Acquire < -0.1):
+            self.IntakeMotor.set(-0.5)
         else:
             self.IntakeMotor.set(0)
 
