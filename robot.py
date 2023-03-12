@@ -61,9 +61,9 @@ class MyRobot(wpilib.TimedRobot):
             self.JackShaftMotor.set(0.5)
         else:
             if (currentPosition < 10):
-                self.JackShaftMotor.set(-0.03)
+                self.JackShaftMotor.set(-0.01)
             else:
-                self.JackShaftMotor.set(0.05)
+                self.JackShaftMotor.set(0.03)
             self.armRunningToPosition = False
 
     def autonomousInit(self):
