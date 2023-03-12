@@ -56,11 +56,11 @@ class MyRobot(wpilib.TimedRobot):
         currentPosition = self.ArmEncoder.getPosition()
         print("Current position:", currentPosition, " Wanted: ", position)
         if(currentPosition > position + offset):
-            self.JackShaftMotor.set(-0.4)
+            self.JackShaftMotor.set(-0.5)
         elif(currentPosition < position - offset):
-            self.JackShaftMotor.set(0.4)
+            self.JackShaftMotor.set(0.5)
         else:
-            self.JackShaftMotor.set(0)
+            self.JackShaftMotor.set(0.05)
             self.armRunningToPosition = False
 
     def autonomousInit(self):
@@ -94,6 +94,7 @@ class MyRobot(wpilib.TimedRobot):
         self.LEFT_TRIGGER=self.OperatorJoystick.getRawAxis(2)
         self.RIGHT_TRIGGER=self.OperatorJoystick.getRawAxis(3)
 
+        self.TEST=self.OperatorJoystick.getRawAxis(1)
         self.A_Button=self.OperatorJoystick.getRawButton(1)
         self.B_Button=self.OperatorJoystick.getRawButton(2)
         self.X_Button=self.OperatorJoystick.getRawButton(3)
@@ -128,6 +129,13 @@ class MyRobot(wpilib.TimedRobot):
                 self.JackShaftMotor.set(self.MaxArmSpeed*self.RIGHT_TRIGGER)
             if self.LEFT_TRIGGER > 0:
                 self.JackShaftMotor.set(-1*self.MaxArmSpeed*self.LEFT_TRIGGER)
+
+        if (self.TEST > 0.1):
+            self.IntakeMotor.set(0.3)
+        elif(self.TEST < -0.1):
+            self.IntakeMotor.set(-1)
+        else:
+            self.IntakeMotor.set(0)
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
