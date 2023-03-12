@@ -125,13 +125,13 @@ class MyRobot(wpilib.TimedRobot):
         if(self.armRunningToPosition):
             self.setArmPosition(self.wantedArmPosition)
         else:
-            if self.RIGHT_TRIGGER > 0:
+            if self.RIGHT_TRIGGER > 0.05:
                 self.JackShaftMotor.set(self.MaxArmSpeed*self.RIGHT_TRIGGER)
-            if self.LEFT_TRIGGER > 0:
+            if self.LEFT_TRIGGER > 0.05:
                 self.JackShaftMotor.set(-1*self.MaxArmSpeed*self.LEFT_TRIGGER)
 
         if (self.Acquire > 0.1):
-            self.IntakeMotor.set(0.1)
+            self.IntakeMotor.set(0.2)
         elif(self.Acquire < -0.1):
             self.IntakeMotor.set(-0.5)
         else:
