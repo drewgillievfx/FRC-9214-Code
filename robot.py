@@ -3,8 +3,8 @@
 import wpilib
 import ctre
 import rev
-import neopixel
-import board
+# import neopixel
+# import board
 
 
 class MyRobot(wpilib.TimedRobot):
@@ -46,10 +46,10 @@ class MyRobot(wpilib.TimedRobot):
         #Auto inits
         self.AutoTimer = wpilib.Timer()
 
-        pixel_pin = board.D1 # change this to match the pin you're using
-        num_pixels = 60 # change this to match the number of LEDs in your strip
-        ORDER = neopixel.GRB # change this to match your LED strip's color order
-        self.pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1.0, auto_write=False, pixel_order=ORDER)
+        # pixel_pin = board.D1 # change this to match the pin you're using
+        # num_pixels = 60 # change this to match the number of LEDs in your strip
+        # ORDER = neopixel.GRB # change this to match your LED strip's color order
+        # self.pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1.0, auto_write=False, pixel_order=ORDER)
 
 
     def setDrives(self, leftSpeed: float, rightSpeed: float):
@@ -120,12 +120,12 @@ class MyRobot(wpilib.TimedRobot):
         leftSpeed = self.MaxDriveSpeed*self.LEFT_THUMB_UPDOWN
         self.setDrives(leftSpeed, rightSpeed)
 
-        if(self.DRIVEX_Button):
-            self.setGamePiece("cube")
-        elif(self.DRIVEY_Button):
-            self.setGamePiece("cone")
-        else:
-            self.setGamePiece("none")
+        # if(self.DRIVEX_Button):
+        #     self.setGamePiece("cube")
+        # elif(self.DRIVEY_Button):
+        #     self.setGamePiece("cone")
+        # else:
+        #     self.setGamePiece("none")
 
 
         #Operator
@@ -150,23 +150,23 @@ class MyRobot(wpilib.TimedRobot):
                 self.JackShaftMotor.set(self.MaxArmSpeed*self.RIGHT_TRIGGER)
             if self.LEFT_TRIGGER > 0.05:
                 self.JackShaftMotor.set(-1*self.MaxArmSpeed*self.LEFT_TRIGGER)
-    def setGamePiece(self,gamePiece):
-        if gamePiece == "cube":
-            self.pixels.fill((255, 0, 255))
-            self.pixels.show()
-        elif gamePiece == "cone":
-            self.pixels.fill((255, 255, 0))
-            self.pixels.show()
-        elif gamePiece == "none":
-            self.pixels.fill((0, 0, 0))
-            self.pixels.show()
+    # def setGamePiece(self,gamePiece):
+    #     if gamePiece == "cube":
+    #         self.pixels.fill((255, 0, 255))
+    #         self.pixels.show()
+    #     elif gamePiece == "cone":
+    #         self.pixels.fill((255, 255, 0))
+    #         self.pixels.show()
+    #     elif gamePiece == "none":
+    #         self.pixels.fill((0, 0, 0))
+    #         self.pixels.show()
 
-        if (self.Acquire > 0.1):
-            self.IntakeMotor.set(0.2)
-        elif(self.Acquire < -0.1):
-            self.IntakeMotor.set(-0.5)
-        else:
-            self.IntakeMotor.set(0)
+    #     if (self.Acquire > 0.1):
+    #         self.IntakeMotor.set(0.2)
+    #     elif(self.Acquire < -0.1):
+    #         self.IntakeMotor.set(-0.5)
+    #     else:
+    #         self.IntakeMotor.set(0)
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
