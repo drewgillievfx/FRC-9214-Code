@@ -39,9 +39,9 @@ class MyRobot(wpilib.TimedRobot):
         # Constants
         self.MaxDriveSpeed=0.75
         self.MaxArmSpeed=0.5
-        self.UpperArm = 60
-        self.LowerArm = 40
-        self.armHome = 10
+        self.UpperArm = 75
+        self.LowerArm = 60
+        self.armHome = 2
 
         #Auto inits
         self.AutoTimer = wpilib.Timer()
@@ -64,11 +64,14 @@ class MyRobot(wpilib.TimedRobot):
         currentPosition = self.ArmEncoder.getPosition()
         print("Current position:", currentPosition, " Wanted: ", position)
         if(currentPosition > position + offset):
-            self.JackShaftMotor.set(-0.4)
+            self.JackShaftMotor.set(-0.5)
         elif(currentPosition < position - offset):
-            self.JackShaftMotor.set(0.4)
+            self.JackShaftMotor.set(0.5)
         else:
-            self.JackShaftMotor.set(0)
+            if (currentPosition < 10):
+                self.JackShaftMotor.set(-0.01)
+            else:
+                self.JackShaftMotor.set(0.03)
             self.armRunningToPosition = False
 
     def autonomousInit(self):
@@ -76,10 +79,10 @@ class MyRobot(wpilib.TimedRobot):
         self.AutoTimer.start()
 
     def autonomousPeriodic(self):
-        if(self.AutoTimer.get() < 3):
-            self.setDrives(0.3, 0.3)
-        elif(self.AutoTimer.get() < 10):
-            self.setDrives(-0.3, -0.3)
+        if(self.AutoTimer.get() < 0.5):
+            self.setDrives(0.5, 0.5)
+        elif(self.AutoTimer.get() < 5):
+            self.setDrives(-0.4, -0.4)
         else:
             self.setDrives(0, 0)
         
@@ -104,6 +107,7 @@ class MyRobot(wpilib.TimedRobot):
         self.LEFT_TRIGGER=self.OperatorJoystick.getRawAxis(2)
         self.RIGHT_TRIGGER=self.OperatorJoystick.getRawAxis(3)
 
+        self.Acquire =self.OperatorJoystick.getRawAxis(1)
         self.A_Button=self.OperatorJoystick.getRawButton(1)
         self.B_Button=self.OperatorJoystick.getRawButton(2)
         self.X_Button=self.OperatorJoystick.getRawButton(3)
@@ -142,9 +146,9 @@ class MyRobot(wpilib.TimedRobot):
         if(self.armRunningToPosition):
             self.setArmPosition(self.wantedArmPosition)
         else:
-            if self.RIGHT_TRIGGER > 0:
+            if self.RIGHT_TRIGGER > 0.05:
                 self.JackShaftMotor.set(self.MaxArmSpeed*self.RIGHT_TRIGGER)
-            if self.LEFT_TRIGGER > 0:
+            if self.LEFT_TRIGGER > 0.05:
                 self.JackShaftMotor.set(-1*self.MaxArmSpeed*self.LEFT_TRIGGER)
     def setGamePiece(self,gamePiece):
         if gamePiece == "cube":
@@ -156,6 +160,13 @@ class MyRobot(wpilib.TimedRobot):
         elif gamePiece == "none":
             self.pixels.fill((0, 0, 0))
             self.pixels.show()
+
+        if (self.Acquire > 0.1):
+            self.IntakeMotor.set(0.2)
+        elif(self.Acquire < -0.1):
+            self.IntakeMotor.set(-0.5)
+        else:
+            self.IntakeMotor.set(0)
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
